@@ -86,50 +86,36 @@ function testRegex(value, query) {
 }
 
 function updateRow(row) {
-    if (row.find(".rowHidden").length === 0 || row.hasClass("rowHidden")) {
-        row.show();
-    }
-    else {
-        row.hide();
-    }
+    let showRow = (row.find(".rowHidden").length === 0 || row.hasClass("rowHidden"));
+    row.toggle(showRow);
 }
 
 function searchSongName(query) {
-    $(".songData .songName").each((index, elem) => {
-        if (testRegex($(elem).text(), query)) {
-            $(elem).removeClass("rowHidden");
-        }
-        else {
-            $(elem).addClass("rowHidden");
-        }
+    $(".songData .songName").each((_index, elem) => {
+        let res = testRegex($(elem).text(), query);
+        $(elem).toggleClass("rowHidden", !res);
         updateRow($(elem).parent());
     });
 }
 
 function searchArtist(query) {
-    $(".songData .songArtist").each((index, elem) => {
-        if (testRegex($(elem).text(), query)) {
-            $(elem).removeClass("rowHidden");
-        }
-        else {
-            $(elem).addClass("rowHidden");
-        }
+    $(".songData .songArtist").each((_index, elem) => {
+        let res = testRegex($(elem).text(), query);
+        $(elem).toggleClass("rowHidden", !res);
         updateRow($(elem).parent());
     });
 }
 
 function searchAnime(query) {
-    $(".songData .animeNameRomaji").each((index, elem) => {
+    $(".songData .animeNameRomaji").each((_index, elem) => {
         if (testRegex($(elem).text(), query)) {
             $(elem).removeClass("rowHidden");
             $(elem).parent().find(".animeNameEnglish").removeClass("rowHidden");
-        }
-        else {
+        } else {
             if (testRegex($(elem).parent().find(".animeNameEnglish").text(), query)) {
                 $(elem).removeClass("rowHidden");
                 $(elem).parent().find(".animeNameEnglish").removeClass("rowHidden");
-            }
-            else {
+            } else {
                 $(elem).parent().find(".animeNameEnglish").addClass("rowHidden");
                 $(elem).addClass("rowHidden");
             }
@@ -139,7 +125,7 @@ function searchAnime(query) {
 }
 
 function updateTypes() {
-    $(".songData .songType").each((index, elem) => {
+    $(".songData .songType").each((_index, elem) => {
         if ($(elem).text().includes("Opening") && $("#slTypeOpenings").hasClass("unchecked")) {
             $(elem).addClass("rowHidden");
         }

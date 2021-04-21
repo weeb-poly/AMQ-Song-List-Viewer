@@ -1,94 +1,104 @@
 function loadData() {
     playerNames.clear();
+
+    let $slTable = $("#slTable");
+    let $slAnimeTitleSelect = $("#slAnimeTitleSelect");
+
     $("#slPlayerList > option").remove();
     $("#slTableContainer").show();
-    $("#slTable").show();
+    $slTable.show();
     $("#slScoreboard").show();
     $("#slInfo").show();
+
     clearInfo();
     clearScoreboard();
-    $("tr.songData").remove();
-    for (let song of importData) {
-        let guesses = song.players.filter((tmpPlayer) => tmpPlayer.correct === true);
-        $("#slTable").append($("<tr></tr>")
-            .addClass("songData")
-            .addClass("clickable")
-            .append($("<td></td>")
-                .text(song.songNumber)
-                .addClass("songNumber")
-            )
-            .append($("<td></td>")
-                .text(song.name)
-                .addClass("songName")
-            )
-            .append($("<td></td>")
-                .text(song.artist)
-                .addClass("songArtist")
-            )
-            .append($("<td></td>")
-                .text(song.anime.romaji)
-                .addClass("animeNameRomaji")
-            )
-            .append($("<td></td>")
-                .text(song.anime.english)
-                .addClass("animeNameEnglish")
-            )
-            .append($("<td></td>")
-                .text(song.type)
-                .addClass("songType")
-            )
-            .append($("<td></td>")
-                .text("...")
-                .addClass("playerAnswer")
-            )
-            .append($("<td></td>")
-                .text(guesses.length + "/" + song.activePlayers + " (" + parseFloat((guesses.length/song.activePlayers*100).toFixed(2)) + "%)")
-                .addClass("guessesCounter")
-            )
-            .append($("<td></td>")
-                .text(formatSamplePoint(song.startSample, song.videoLength))
-                .addClass("samplePoint")
-            )
-            .click(function () {
-                if (!$(this).hasClass("selected")) {
-                    $(".selected").removeClass("selected");
-                    updateScoreboard(song);
-                    updateInfo(song);
-                    $(this).addClass("selected");
-                }
-                else {
-                    $(".selected").removeClass("selected");
-                    clearScoreboard();
-                    clearInfo();
-                }
-            })
-            .hover(function () {
-                $(this).addClass("hover");
-            }, function () {
-                $(this).removeClass("hover")
-            })
 
+    $("tr.songData").remove();
+
+    let songDataClick = function () {
+        let isSelected = $(this).hasClass("selected");
+
+        $(".selected").removeClass("selected");
+
+        if (!isSelected) {
+            updateScoreboard(song);
+            updateInfo(song);
+            $(this).addClass("selected");
+        } else {
+            clearScoreboard();
+            clearInfo();
+        }
+    };
+
+    for (let song of importData) {
+        let guesses = song.players.filter(tmpPlayer => (tmpPlayer.correct === true));
+
+        let guessesPercentage = (guesses.length / song.activePlayers * 100).toFixed(2);
+
+        $slTable.append(
+            $("<tr></tr>")
+                .addClass("songData")
+                .addClass("clickable")
+                .append($("<td></td>", {
+                    "class": "songNumber",
+                    text: song.songNumber
+                }))
+                .append($("<td></td>", {
+                    "class": "songName",
+                    text: song.name
+                }))
+                .append($("<td></td>", {
+                    "class": "songArtist",
+                    text: song.artist
+                }))
+                .append($("<td></td>", {
+                    "class": "animeNameRomaji",
+                    text: song.anime.romaji
+                }))
+                .append($("<td></td>", {
+                    "class": "animeNameEnglish",
+                    text: song.anime.english
+                }))
+                .append($("<td></td>", {
+                    "class": "songType",
+                    text: song.type
+                }))
+                .append($("<td></td>", {
+                    "class": "playerAnswer",
+                    text: "..."
+                }))
+                .append($("<td></td>", {
+                    "class": "guessesCounter",
+                    text: guesses.length + "/" + song.activePlayers + " (" + guessesPercentage + "%)"
+                }))
+                .append($("<td></td>", {
+                    "class": "samplePoint",
+                    text: formatSamplePoint(song.startSample, song.videoLength)
+                }))
+                .click(songDataClick)
         );
-        if ($("#slAnimeTitleSelect").val() === "english") {
-            $(".animeNameEnglish").show();
-            $(".animeNameRomaji").hide();
-        }
-        else {
-            $(".animeNameEnglish").hide();
-            $(".animeNameRomaji").show();
-        }
-        song.players.forEach((player) => {
-            playerNames.add(player.name);
-        });
+
+        let engLang = ($slAnimeTitleSelect.val() === "english");
+        $(".animeNameEnglish").toggle(engLang);
+        $(".animeNameRomaji").toggle(!engLang);
+
+        song.players.forEach(playerNames.add, playerNames);
     }
-    playerNames.forEach((p1, p2) => {
-        $("#slPlayerList").append($("<option></option>")
-            .attr("value", p1)
+
+    let $slPlayerList = $("#slPlayerList");
+
+    playerNames.forEach((p1) => {
+        $slPlayerList.append(
+            $("<option></option>", { value: p1 })
         );
     });
+
     $(".playerAnswer").hide();
-    updateTableGuesses($("#slPlayerName").val());
-    updateScoreboardHighlight($("#slPlayerName").val());
+
+    let playerName = $("#slPlayerName").val();
+
+    updateTableGuesses(playerName);
+    updateScoreboardHighlight(playerName);
 }
 
 function formatSamplePoint(start, length) {
@@ -103,35 +113,35 @@ function formatSamplePoint(start, length) {
 
 function updateTableGuesses(playerName) {
     let playerExists = false;
+    let $slPlayerAnswers = $("#slPlayerAnswers");
+    let $slPlayerCorrect = $("#slPlayerCorrect");
+
     for (let i = 0; i < importData.length; i++) {
-        let findPlayer = importData[i].players.find((player) => {
-            return player.name === playerName;
-        });
+        let findPlayer = importData[i].players.find(
+            player => (player.name === playerName)
+        );
+
+        let $songData = $($("tr.songData").get(i));
+        let $playerAnswer = $($(".songData .playerAnswer").get(i));
+
         if (findPlayer !== undefined) {
             playerExists = true;
-            if (!$("#slPlayerAnswers").hasClass("unchecked")) {
-                $($(".songData .playerAnswer").get(i)).text(findPlayer.answer);
+            if (!$slPlayerAnswers.hasClass("unchecked")) {
+                $playerAnswer.text(findPlayer.answer);
                 $(".playerAnswer").show();
-            }
-            else {
+            } else {
                 $(".playerAnswer").hide();
             }
-            if (findPlayer.active === true && !$("#slPlayerCorrect").hasClass("unchecked")) {
-                $($("tr.songData").get(i)).addClass(findPlayer.correct === true ? "rightAnswerTable" : "wrongAnswerTable");
+
+            if (findPlayer.active === true && !$slPlayerCorrect.hasClass("unchecked")) {
+                $songData.addClass(findPlayer.correct === true ? "rightAnswerTable" : "wrongAnswerTable");
+            } else {
+                $songData.removeClass("rightAnswerTable wrongAnswerTable");
             }
-            else {
-                $($("tr.songData").get(i)).removeClass("rightAnswerTable");
-                $($("tr.songData").get(i)).removeClass("wrongAnswerTable");
-            }
-        }
-        else {
-            $($("tr.songData").get(i)).removeClass("rightAnswerTable");
-            $($("tr.songData").get(i)).removeClass("wrongAnswerTable");
-            $($(".songData .playerAnswer").get(i)).text("...");
-            if (!playerExists) {
-                $(".playerAnswer").hide();
-            }
-            if ($("#slPlayerAnswers").hasClass("unchecked")) {
+        } else {
+            $songData.removeClass("rightAnswerTable wrongAnswerTable");
+            $playerAnswer.text("...");
+            if (!playerExists || $slPlayerAnswers.hasClass("unchecked")) {
                 $(".playerAnswer").hide();
             }
         }
@@ -140,32 +150,44 @@ function updateTableGuesses(playerName) {
 }
 
 function updateScoreboard(song) {
+    let $slScoreboardContainer = $("#slScoreboardContainer");
     $(".slScoreboardEntry").remove();
     song.players.sort((a, b) => a.positionSlot - b.positionSlot).forEach((player) => {
-        $("#slScoreboardContainer").append($("<div></div>")
-            .addClass("slScoreboardEntry")
-            .addClass(player.active === false ? "disabled" : "")
-            .append($("<span></span>")
-                .addClass("slScoreboardPosition")
-                .text(player.position)
+        $slScoreboardContainer.append(
+            $("<div></div>", {
+                "class": "slScoreboardEntry"
+            })
+            .toggleClass("disabled", player.active === false)
+            .append(
+                $("<span></span>", {
+                    "class": "slScoreboardPosition",
+                    text: player.position
+                })
                 .width(player.position.toString().length === 3 ? "42px" : "")
                 .css("text-align", player.position.toString().length === 3 ? "left" : "center")
             )
-            .append($("<p></p>")
-                .append($("<b></b>")
-                    .addClass("slScoreboardScore")
-                    .addClass(player.correct === true ? "rightAnswerScoreboard" : "")
-                    .text(player.score)
+            .append(
+                $("<p></p>")
+                .append(
+                    $("<b></b>", {
+                        "class": 'slScoreboardScore',
+                        text: player.score
+                    })
+                    .toggleClass("rightAnswerScoreboard", player.correct === true)
                 )
-                .append($("<span></span>")
-                    .addClass("slScoreboardCorrectGuesses")
-                    .addClass((song.gameMode !== "Standard" && song.gameMode !== "Ranked") ? "" : "hide")
-                    .text(player.correctGuesses)
+                .append(
+                    $("<span></span>", {
+                        "class": "slScoreboardCorrectGuesses",
+                        text: player.correctGuesses
+                    })
+                    .toggleClass("hide", (song.gameMode !== "Standard" && song.gameMode !== "Ranked"))
                 )
-                .append($("<span></span>")
-                    .addClass("slScoreboardName")
-                    .text(player.name)
-                    .addClass($("#slPlayerName").val() === player.name ? "self" : "")
+                .append(
+                    $("<span></span>", {
+                        "class": 'slScoreboardName',
+                        text: player.name
+                    })
+                    .toggleClass("self", $("#slPlayerName").val() === player.name)
                 )
             )
         )
@@ -173,56 +195,66 @@ function updateScoreboard(song) {
 }
 
 function updateScoreboardHighlight(name) {
-    $(".slScoreboardEntry").each((index, elem) => {
-        if ($(elem).find(".slScoreboardName").text() === name) {
-            $(elem).find(".slScoreboardName").addClass("self");
-        }
-        else {
-            $(elem).find(".slScoreboardName").removeClass("self");
-        }
+    $(".slScoreboardEntry").each((_index, elem) => {
+        var $slScoreboardName = $(elem).find(".slScoreboardName");
+        var addSelf = ($slScoreboardName.text() === name);
+        $slScoreboardName.toggleClass("self", addSelf);
     });
 }
 
 function updateInfo(song) {
     clearInfo();
-    let infoRow1 = $("<div></div>")
-        .attr("class", "slInfoRow");
-    let infoRow2 = $("<div></div>")
-        .attr("class", "slInfoRow");
-    let infoRow3 = $("<div></div>")
-        .attr("class", "slInfoRow");
-    let infoRow4 = $("<div></div>")
-        .attr("class", "slInfoRow");
+    let infoRow1 = $("<div></div>", {
+        "class": 'slInfoRow'
+    });
+    let infoRow2 = $("<div></div>", {
+        "class": 'slInfoRow'
+    });
+    let infoRow3 = $("<div></div>", {
+        "class": 'slInfoRow'
+    });
+    let infoRow4 = $("<div></div>", {
+        "class": 'slInfoRow'
+    });
     
     let guesses = song.players.filter((tmpPlayer) => tmpPlayer.correct === true);
 
-    let infoSongName = $("<div></div>")
-        .attr("id", "slInfoSongName")
-        .html("<h5><b>Song Name</b></h5><p>" + song.name + "</p>");
-    let infoArtist = $("<div></div>")
-        .attr("id", "slInfoArtist")
-        .html("<h5><b>Artist</b></h5><p>" + song.artist + "</p>");
-    let infoAnimeEnglish = $("<div></div>")
-        .attr("id", "slInfoAnimeEnglish")
-        .html("<h5><b>Anime English</b></h5><p>" + song.anime.english + "</p>");
-    let infoAnimeRomaji = $("<div></div>")
-        .attr("id", "slInfoAnimeRomaji")
-        .html("<h5><b>Anime Romaji</b></h5><p>" + song.anime.romaji + "</p>");
-    let infoType = $("<div></div>")
-        .attr("id", "slInfoType")
-        .html("<h5><b>Type</b></h5><p>" + song.type + "</p>");
-    let infoSample = $("<div></div>")
-        .attr("id", "slInfoSample")
-        .html("<h5><b>Sample Point</b></h5><p>" + formatSamplePoint(song.startSample, song.videoLength) + "</p>");
-    let infoGuessed = $("<div></div>")
-        .attr("id", "slInfoGuessed")
-        .html("<h5><b>Guessed<br>" + guesses.length + "/" + song.activePlayers + " (" + parseFloat((guesses.length/song.activePlayers*100).toFixed(2)) + "%)</b></h5>");
-    let infoFromList = $("<div></div>")
-        .attr("id", "slInfoFromList")
-        .html("<h5><b>From Lists<br>" + song.fromList.length + "/" + song.totalPlayers + " (" + parseFloat((song.fromList.length/song.totalPlayers*100).toFixed(2)) + "%)</b></h5>");
-    let infoUrls = $("<div></div>")
-        .attr("id", "slInfoUrls")
-        .html("<h5><b>URLs</b></h5>");
+    let infoSongName = $("<div></div>", {
+        id: "slInfoSongName",
+        html: "<h5><b>Song Name</b></h5><p>" + song.name + "</p>"
+    });
+    let infoArtist = $("<div></div>", {
+        id: "slInfoArtist",
+        html: "<h5><b>Artist</b></h5><p>" + song.artist + "</p>"
+    });
+    let infoAnimeEnglish = $("<div></div>", {
+        id: "slInfoAnimeEnglish",
+        html: "<h5><b>Anime English</b></h5><p>" + song.anime.english + "</p>"
+    });
+    let infoAnimeRomaji = $("<div></div>", {
+        id: "slInfoAnimeRomaji",
+        html: "<h5><b>Anime Romaji</b></h5><p>" + song.anime.romaji + "</p>"
+    });
+    let infoType = $("<div></div>", {
+        id: "slInfoType",
+        html: "<h5><b>Type</b></h5><p>" + song.type + "</p>"
+    });
+    let infoSample = $("<div></div>", {
+        id: "slInfoSample",
+        html: "<h5><b>Sample Point</b></h5><p>" + formatSamplePoint(song.startSample, song.videoLength) + "</p>"
+    });
+    let infoGuessed = $("<div></div>", {
+        id: "slInfoGuessed",
+        html: "<h5><b>Guessed<br>" + guesses.length + "/" + song.activePlayers + " (" + (guesses.length/song.activePlayers*100).toFixed(2) + "%)</b></h5>"
+    });
+    let infoFromList = $("<div></div>", {
+        id: "slInfoFromList",
+        html: "<h5><b>From Lists<br>" + song.fromList.length + "/" + song.totalPlayers + " (" + (song.fromList.length/song.totalPlayers*100).toFixed(2) + "%)</b></h5>"
+    });
+    let infoUrls = $("<div></div>", {
+        id: "slInfoUrls",
+        html: "<h5><b>URLs</b></h5>"
+    });
 
     infoRow1.append(infoSongName);
     infoRow1.append(infoArtist);
@@ -242,32 +274,35 @@ function updateInfo(song) {
         infoGuessed.css("width", "98%");
         infoFromList.hide();
         if (guesses.length > 1) {
-            let infoGuessedLeft = $("<ul></ul>")
-                .attr("id", "slInfoGuessedLeft");
-            let infoGuessedRight = $("<ul></ul>")
-                .attr("id", "slInfoGuessedRight");
+            let infoGuessedLeft = $("<ul></ul>", {
+                id: "slInfoGuessedLeft"
+            });
+            let infoGuessedRight = $("<ul></ul>", {
+                id: "slInfoGuessedRight"
+            });
             let i = 0;
             for (let guessed of guesses) {
+                let $li = $("<li></li>", {
+                    text: guessed.name + " (" + guessed.score + ")"
+                });
                 if (i++ % 2 === 0) {
-                    infoGuessedLeft.append($("<li></li>")
-                        .text(guessed.name + " (" + guessed.score + ")")
-                    );
-                }
-                else {
-                    infoGuessedRight.append($("<li></li>")
-                        .text(guessed.name + " (" + guessed.score + ")")
-                    );
+                    infoGuessedLeft.append($li);
+                } else {
+                    infoGuessedRight.append($li);
                 }
             }
             infoGuessed.append(infoGuessedLeft);
             infoGuessed.append(infoGuessedRight);
         }
         else {
-            infoListContainer = $("<ul></ul>")
-                .attr("id", "slInfoGuessedList");
+            infoListContainer = $("<ul></ul>", {
+                id: "slInfoGuessedList"
+            });
             for (let guessed of guesses) {
-                infoListContainer.append($("<li></li>")
-                    .text(guessed.name + " (" + guessed.score + ")")
+                infoListContainer.append(
+                    $("<li></li>", {
+                        text: guessed.name + " (" + guessed.score + ")"
+                    })
                 );
             }
             infoGuessed.append(infoListContainer);
@@ -275,16 +310,20 @@ function updateInfo(song) {
     }
     else {
         infoGuessed.css("width", "");
-        infoListContainer = $("<ul></ul>")
-            .attr("id", "slInfoGuessedList");
+        infoListContainer = $("<ul></ul>", {
+            id: "slInfoGuessedList"
+        });
         infoFromList.show();
         for (let guessed of guesses) {
-            infoListContainer.append($("<li></li>")
-                .text(guessed.name + " (" + guessed.score + ")")
+            infoListContainer.append(
+                $("<li></li>", {
+                    text: guessed.name + " (" + guessed.score + ")"
+                })
             );
         }
         infoGuessed.append(infoListContainer);
     }
+
     let listStatus = {
         1: "Watching",
         2: "Completed",
@@ -296,8 +335,10 @@ function updateInfo(song) {
 
     infoListContainer = $("<ul></ul>");
     for (let fromList of song.fromList) {
-        infoListContainer.append($("<li></li>")
-            .text(fromList.name + " (" + listStatus[fromList.listStatus] + ((fromList.score !== null) ? ", " + fromList.score + ")" : ")"))
+        infoListContainer.append(
+            $("<li></li>", {
+                text: fromList.name + " (" + listStatus[fromList.listStatus] + ((fromList.score !== null) ? ", " + fromList.score + ")" : ")")
+            })
         );
     }
     infoFromList.append(infoListContainer);
@@ -309,18 +350,24 @@ function updateInfo(song) {
             let innerHTML = "";
             innerHTML += (host === "catbox" ? "Catbox " : (host === "animethemes" ? "AnimeThemes " : "OpeningsMoe "));
             innerHTML += (resolution === "0") ? "MP3: " : (resolution === "480") ? "480p: " : "720p: ";
-            innerHTML += "<a href=\"" + url + "\" target=\"_blank\">" + url + "</a>";
-            infoListContainer.append($("<li></li>")
-                .html(innerHTML)
+            innerHTML += '<a href="' + url + '" target="_blank">' + url + "</a>";
+            infoListContainer.append(
+                $("<li></li>", {
+                    html: innerHTML
+                })
             );
         }
     }
     infoUrls.append(infoListContainer);
 
-    $("#slInfoBody").append(infoRow1);
-    $("#slInfoBody").append(infoRow2);
-    $("#slInfoBody").append(infoRow3);
-    $("#slInfoBody").append(infoRow4);
+    // $("#slInfoBody").append(infoRow1, infoRow2, infoRow3, infoRow4);
+
+    let $slInfoBody = $("#slInfoBody");
+
+    $slInfoBody.append(infoRow1);
+    $slInfoBody.append(infoRow2);
+    $slInfoBody.append(infoRow3);
+    $slInfoBody.append(infoRow4);
 }
 
 function clearInfo() {
