@@ -15,21 +15,6 @@ function loadData() {
 
     $("tr.songData").remove();
 
-    let songDataClick = function () {
-        let isSelected = $(this).hasClass("selected");
-
-        $(".selected").removeClass("selected");
-
-        if (!isSelected) {
-            updateScoreboard(song);
-            updateInfo(song);
-            $(this).addClass("selected");
-        } else {
-            clearScoreboard();
-            clearInfo();
-        }
-    };
-
     for (let song of importData) {
         let guesses = song.players.filter(tmpPlayer => (tmpPlayer.correct === true));
 
@@ -75,7 +60,20 @@ function loadData() {
                     "class": "samplePoint",
                     text: formatSamplePoint(song.startSample, song.videoLength)
                 }))
-                .click(songDataClick)
+                .click(function () {
+                    let isSelected = $(this).hasClass("selected");
+
+                    $(".selected").removeClass("selected");
+
+                    if (!isSelected) {
+                        updateScoreboard(song);
+                        updateInfo(song);
+                        $(this).addClass("selected");
+                    } else {
+                        clearScoreboard();
+                        clearInfo();
+                    }
+                })
         );
 
         let engLang = ($slAnimeTitleSelect.val() === "english");
