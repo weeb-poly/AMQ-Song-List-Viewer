@@ -43,24 +43,26 @@ function loadData() {
 
         let guessesPercentage = (guesses.length / song.activePlayers * 100).toFixed(2);
 
-        let tr = trTemplate.content.cloneNode(true);
+        let trNode = trTemplate.content.cloneNode(true);
 
-        tr.getElementsByClassName("songNumber")[0].innerText = song.songNumber;
-        tr.getElementsByClassName("songName")[0].innerText = song.name;
-        tr.getElementsByClassName("songArtist")[0].innerText = song.artist;
-        tr.getElementsByClassName("animeNameRomaji")[0].innerText = song.anime.romaji;
-        tr.getElementsByClassName("animeNameEnglish")[0].innerText = song.anime.english;
-        tr.getElementsByClassName("songType")[0].innerText = song.type;
-        tr.getElementsByClassName("playerAnswer")[0].innerText = "...";
-        tr.getElementsByClassName("guessesCounter")[0].innerText = guesses.length + "/" + song.activePlayers + " (" + guessesPercentage + "%)";
-        tr.getElementsByClassName("samplePoint")[0].innerText = formatSamplePoint(song.startSample, song.videoLength);
+        trNode.getElementsByClassName("songNumber")[0].innerText = song.songNumber;
+        trNode.getElementsByClassName("songName")[0].innerText = song.name;
+        trNode.getElementsByClassName("songArtist")[0].innerText = song.artist;
+        trNode.getElementsByClassName("animeNameRomaji")[0].innerText = song.anime.romaji;
+        trNode.getElementsByClassName("animeNameEnglish")[0].innerText = song.anime.english;
+        trNode.getElementsByClassName("songType")[0].innerText = song.type;
+        trNode.getElementsByClassName("playerAnswer")[0].innerText = "...";
+        trNode.getElementsByClassName("guessesCounter")[0].innerText = guesses.length + "/" + song.activePlayers + " (" + guessesPercentage + "%)";
+        trNode.getElementsByClassName("samplePoint")[0].innerText = formatSamplePoint(song.startSample, song.videoLength);
 
-        $(tr).click(songDataClick);
-        $(tr).data("song", song);
-        $(tr.getElementsByClassName("animeNameRomaji")[0]).toggle(!engLang)
-        $(tr.getElementsByClassName("animeNameEnglish")[0]).toggle(engLang)
+        let trEl = trNode.getElementsByClassName("songData")[0]
+
+        $(trEl).click(songDataClick);
+        $(trEl).data("song", song);
+        $(trEl.getElementsByClassName("animeNameRomaji")[0]).toggle(!engLang)
+        $(trEl.getElementsByClassName("animeNameEnglish")[0]).toggle(engLang)
         
-        tbodyFrag.append(tr);
+        tbodyFrag.appendChild(trNode);
 
         song.players.forEach(playerNames.add, playerNames);
     }
@@ -72,7 +74,7 @@ function loadData() {
     playerNames.forEach((p1) => {
         let opt = document.createElement("option");
         opt.value = p1;
-        slPlayerListFrag.append(opt);
+        slPlayerListFrag.appendChild(opt);
     });
 
     $("#slPlayerList").append(slPlayerListFrag);
