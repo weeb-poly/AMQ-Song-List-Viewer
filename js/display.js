@@ -67,17 +67,15 @@ function loadData() {
 
     $("#slTable > tbody").append(tbodyFrag);
     
-    let slPlayerListFragment = $(document.createDocumentFragment());
+    let slPlayerListFrag = document.createDocumentFragment();
 
     playerNames.forEach((p1) => {
-        slPlayerListFragment.append(
-            $("<option></option>", {
-                value: p1
-            })
-        );
+        let opt = document.createElement("option");
+        opt.value = p1;
+        slPlayerListFrag.append(opt);
     });
-    
-    $("#slPlayerList").append(slPlayerListFragment);
+
+    $("#slPlayerList").append(slPlayerListFrag);
 
     $(".playerAnswer").hide();
 
