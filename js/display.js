@@ -33,56 +33,34 @@ function loadData() {
     };
 
     let engLang = ($slAnimeTitleSelect.val() === "english");
-    
-    let tbodyFragment = $(document.createDocumentFragment());
+
+    let tbodyFrag = document.createDocumentFragment();
+
+    let trTemplate = document.getElementById("slTableDataTemplate");
 
     for (let song of importData) {
         let guesses = song.players.filter(tmpPlayer => (tmpPlayer.correct === true));
 
         let guessesPercentage = (guesses.length / song.activePlayers * 100).toFixed(2);
 
-        tbodyFragment.append(
-            $("<tr></tr>", {
-                "class": "songData clickable",
-                click: songDataClick
-            }).data("song", song)
-            .append($("<td></td>", {
-                "class": "songNumber",
-                text: song.songNumber
-            }))
-            .append($("<td></td>", {
-                "class": "songName",
-                text: song.name
-            }))
-            .append($("<td></td>", {
-                "class": "songArtist",
-                text: song.artist
-            }))
-            .append($("<td></td>", {
-                "class": "animeNameRomaji",
-                text: song.anime.romaji
-            }).toggle(!engLang))
-            .append($("<td></td>", {
-                "class": "animeNameEnglish",
-                text: song.anime.english
-            }).toggle(engLang))
-            .append($("<td></td>", {
-                "class": "songType",
-                text: song.type
-            }))
-            .append($("<td></td>", {
-                "class": "playerAnswer",
-                text: "..."
-            }))
-            .append($("<td></td>", {
-                "class": "guessesCounter",
-                text: guesses.length + "/" + song.activePlayers + " (" + guessesPercentage + "%)"
-            }))
-            .append($("<td></td>", {
-                "class": "samplePoint",
-                text: formatSamplePoint(song.startSample, song.videoLength)
-            }))
-        );
+        let tr = trTemplate.content.cloneNode(true);
+
+        tr.getElementsByClassName("songNumber")[0].innerText = song.songNumber;
+        tr.getElementsByClassName("songName")[0].innerText = song.name;
+        tr.getElementsByClassName("songArtist")[0].innerText = song.artist;
+        tr.getElementsByClassName("animeNameRomaji")[0].innerText = song.anime.romaji;
+        tr.getElementsByClassName("animeNameEnglish")[0].innerText = song.anime.english;
+        tr.getElementsByClassName("songType")[0].innerText = song.type;
+        tr.getElementsByClassName("playerAnswer")[0].innerText = "...";
+        tr.getElementsByClassName("guessesCounter")[0].innerText = guesses.length + "/" + song.activePlayers + " (" + guessesPercentage + "%)";
+        tr.getElementsByClassName("samplePoint")[0].innerText = formatSamplePoint(song.startSample, song.videoLength);
+
+        $(tr).click(songDataClick);
+        $(tr).data("song", song);
+        $(tr.getElementsByClassName("animeNameRomaji")[0]).toggle(!engLang)
+        $(tr.getElementsByClassName("animeNameEnglish")[0]).toggle(engLang)
+        
+        tbodyFrag.append(tr);
 
         song.players.forEach(playerNames.add, playerNames);
     }
