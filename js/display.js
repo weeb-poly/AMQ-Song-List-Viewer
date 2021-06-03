@@ -47,7 +47,6 @@ function loadData() {
 
         tr.addEventListener("click", songDataClick);
 
-        
         tr.getElementsByClassName("songNumber")[0].innerText = song.songNumber;
         tr.getElementsByClassName("songName")[0].innerText = song.name;
         tr.getElementsByClassName("songArtist")[0].innerText = song.artist;
@@ -99,35 +98,36 @@ function formatSamplePoint(start, length) {
 
 function updateTableGuesses(playerName) {
     let playerExists = false;
-    let $slPlayerAnswers = $("#slPlayerAnswers");
-    let $slPlayerCorrect = $("#slPlayerCorrect");
+
+    let slPlayerAnswers = document.getElementById('slPlayerAnswers');
+    let slPlayerCorrect = document.getElementById('slPlayerCorrect');
 
     for (let i = 0; i < importData.length; i++) {
         let findPlayer = importData[i].players.find(
             player => (player.name === playerName)
         );
 
-        let $songData = $($("tr.songData").get(i));
-        let $playerAnswer = $($(".songData .playerAnswer").get(i));
+        let songData = document.querySelectorAll("tr.songData")[i];
+        let playerAnswer = songData.getElementsByClassName("playerAnswer");
 
         if (findPlayer !== undefined) {
             playerExists = true;
-            if (!$slPlayerAnswers.hasClass("unchecked")) {
-                $playerAnswer.text(findPlayer.answer);
+            if (!(slPlayerAnswers.classList.contains("unchecked"))) {
+                playerAnswer.innerText = findPlayer.answer;
                 $(".playerAnswer").show();
             } else {
                 $(".playerAnswer").hide();
             }
 
-            if (findPlayer.active === true && !$slPlayerCorrect.hasClass("unchecked")) {
-                $songData.addClass(findPlayer.correct === true ? "rightAnswerTable" : "wrongAnswerTable");
+            if (findPlayer.active === true && !(slPlayerCorrect.classList.contains("unchecked"))) {
+                songData.classList.add(findPlayer.correct === true ? "rightAnswerTable" : "wrongAnswerTable");
             } else {
-                $songData.removeClass("rightAnswerTable wrongAnswerTable");
+                songData.classList.remove("rightAnswerTable", "wrongAnswerTable");
             }
         } else {
-            $songData.removeClass("rightAnswerTable wrongAnswerTable");
-            $playerAnswer.text("...");
-            if (!playerExists || $slPlayerAnswers.hasClass("unchecked")) {
+            songData.classList.remove("rightAnswerTable", "wrongAnswerTable");
+            playerAnswer.innerText = "...";
+            if (!playerExists || slPlayerAnswers.classList.contains("unchecked")) {
                 $(".playerAnswer").hide();
             }
         }
