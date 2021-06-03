@@ -29,7 +29,7 @@ function loadData() {
             clearScoreboard();
             clearInfo();
         }
-    });
+    };
 
     let tbodyFragment = $(document.createDocumentFragment());
 
