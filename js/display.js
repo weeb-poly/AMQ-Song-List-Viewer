@@ -17,6 +17,7 @@ function loadData() {
     
     let songDataClick = function () {
         let $this = $(this);
+        let song = $this.data("song");
         let isSelected = $this.hasClass("selected");
 
         $(".selected").removeClass("selected");
@@ -31,10 +32,10 @@ function loadData() {
         }
     };
 
-    let tbodyFragment = $(document.createDocumentFragment());
-
     let engLang = ($slAnimeTitleSelect.val() === "english");
     
+    let tbodyFragment = $(document.createDocumentFragment());
+
     for (let song of importData) {
         let guesses = song.players.filter(tmpPlayer => (tmpPlayer.correct === true));
 
@@ -44,7 +45,7 @@ function loadData() {
             $("<tr></tr>", {
                 "class": "songData clickable",
                 click: songDataClick
-            })
+            }).data("song", song)
             .append($("<td></td>", {
                 "class": "songNumber",
                 text: song.songNumber
@@ -215,12 +216,45 @@ function updateScoreboardHighlight(name) {
 
 function updateInfo(song) {
     clearInfo();
+
     let infoRow1 = $("<div></div>", {
         "class": 'slInfoRow'
-    });
+    }).append(
+        $("<div></div>", {
+            id: "slInfoSongName",
+            html: "<h5><b>Song Name</b></h5><p>" + song.name + "</p>"
+        })
+    ).append(
+        $("<div></div>", {
+            id: "slInfoArtist",
+            html: "<h5><b>Artist</b></h5><p>" + song.artist + "</p>"
+        })
+    ).append(
+        $("<div></div>", {
+            id: "slInfoType",
+            html: "<h5><b>Type</b></h5><p>" + song.type + "</p>"
+        })
+    );
+
     let infoRow2 = $("<div></div>", {
         "class": 'slInfoRow'
-    });
+    }).append(
+        $("<div></div>", {
+            id: "slInfoAnimeEnglish",
+            html: "<h5><b>Anime English</b></h5><p>" + song.anime.english + "</p>"
+        })
+    ).append(
+        $("<div></div>", {
+            id: "slInfoAnimeRomaji",
+            html: "<h5><b>Anime Romaji</b></h5><p>" + song.anime.romaji + "</p>"
+        })
+    ).append(
+        $("<div></div>", {
+            id: "slInfoSample",
+            html: "<h5><b>Sample Point</b></h5><p>" + formatSamplePoint(song.startSample, song.videoLength) + "</p>"
+        })
+    );
+    
     let infoRow3 = $("<div></div>", {
         "class": 'slInfoRow'
     });
@@ -230,30 +264,6 @@ function updateInfo(song) {
     
     let guesses = song.players.filter((tmpPlayer) => tmpPlayer.correct === true);
 
-    let infoSongName = $("<div></div>", {
-        id: "slInfoSongName",
-        html: "<h5><b>Song Name</b></h5><p>" + song.name + "</p>"
-    });
-    let infoArtist = $("<div></div>", {
-        id: "slInfoArtist",
-        html: "<h5><b>Artist</b></h5><p>" + song.artist + "</p>"
-    });
-    let infoAnimeEnglish = $("<div></div>", {
-        id: "slInfoAnimeEnglish",
-        html: "<h5><b>Anime English</b></h5><p>" + song.anime.english + "</p>"
-    });
-    let infoAnimeRomaji = $("<div></div>", {
-        id: "slInfoAnimeRomaji",
-        html: "<h5><b>Anime Romaji</b></h5><p>" + song.anime.romaji + "</p>"
-    });
-    let infoType = $("<div></div>", {
-        id: "slInfoType",
-        html: "<h5><b>Type</b></h5><p>" + song.type + "</p>"
-    });
-    let infoSample = $("<div></div>", {
-        id: "slInfoSample",
-        html: "<h5><b>Sample Point</b></h5><p>" + formatSamplePoint(song.startSample, song.videoLength) + "</p>"
-    });
     let infoGuessed = $("<div></div>", {
         id: "slInfoGuessed",
         html: "<h5><b>Guessed<br>" + guesses.length + "/" + song.activePlayers + " (" + (guesses.length/song.activePlayers*100).toFixed(2) + "%)</b></h5>"
@@ -266,14 +276,6 @@ function updateInfo(song) {
         id: "slInfoUrls",
         html: "<h5><b>URLs</b></h5>"
     });
-
-    infoRow1.append(infoSongName);
-    infoRow1.append(infoArtist);
-    infoRow1.append(infoType);
-
-    infoRow2.append(infoAnimeEnglish);
-    infoRow2.append(infoAnimeRomaji);
-    infoRow2.append(infoSample);
 
     infoRow3.append(infoUrls);
 
@@ -335,7 +337,7 @@ function updateInfo(song) {
         infoGuessed.append(infoListContainer);
     }
 
-    let listStatus = {
+    const listStatus = {
         1: "Watching",
         2: "Completed",
         3: "On-Hold",
@@ -373,12 +375,14 @@ function updateInfo(song) {
 
     // $("#slInfoBody").append(infoRow1, infoRow2, infoRow3, infoRow4);
 
-    let $slInfoBody = $("#slInfoBody");
+    let slInfoBodyFragment = $(document.createDocumentFragment());
+    
+    slInfoBodyFragment.append(infoRow1);
+    slInfoBodyFragment.append(infoRow2);
+    slInfoBodyFragment.append(infoRow3);
+    slInfoBodyFragment.append(infoRow4);
 
-    $slInfoBody.append(infoRow1);
-    $slInfoBody.append(infoRow2);
-    $slInfoBody.append(infoRow3);
-    $slInfoBody.append(infoRow4);
+    $("#slInfoBody").append(slInfoBodyFragment);
 }
 
 function clearInfo() {
