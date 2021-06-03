@@ -114,12 +114,12 @@ function updateTableGuesses(playerName) {
 
     for (let i = 0; i < importData.length; i++) {
         let songData = document.querySelectorAll("tr.songData")[i];
-        updateSongGuesses(importData[i], songData, hideAnswers, slPlayerCorrectUnchecked);
+        updateSongGuesses(importData[i], songData, playerName, hideAnswers, slPlayerCorrectUnchecked);
     }
 }
 
 
-function updateSongGuesses(song, tr, hideAnswers, slPlayerCorrectUnchecked) {
+function updateSongGuesses(song, tr, playerName, hideAnswers, slPlayerCorrectUnchecked) {
     let findPlayer = song.players.find(
         player => (player.name === playerName)
     );
