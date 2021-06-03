@@ -45,22 +45,24 @@ function loadData() {
 
         let tr = trTemplate.content.firstElementChild.cloneNode(true);
 
+        tr.addEventListener("click", songDataClick);
+
+        
         tr.getElementsByClassName("songNumber")[0].innerText = song.songNumber;
         tr.getElementsByClassName("songName")[0].innerText = song.name;
         tr.getElementsByClassName("songArtist")[0].innerText = song.artist;
         tr.getElementsByClassName("animeNameRomaji")[0].innerText = song.anime.romaji;
+        tr.getElementsByClassName("animeNameRomaji")[0].style.display = engLang ? 'none' : '';
         tr.getElementsByClassName("animeNameEnglish")[0].innerText = song.anime.english;
+        tr.getElementsByClassName("animeNameEnglish")[0].style.display = engLang ? '' : 'none';
         tr.getElementsByClassName("songType")[0].innerText = song.type;
         tr.getElementsByClassName("playerAnswer")[0].innerText = "...";
         tr.getElementsByClassName("guessesCounter")[0].innerText = guesses.length + "/" + song.activePlayers + " (" + guessesPercentage + "%)";
         tr.getElementsByClassName("samplePoint")[0].innerText = formatSamplePoint(song.startSample, song.videoLength);
 
-        $(tr).click(songDataClick);
-        $(tr).data("song", song);
-        $(tr.getElementsByClassName("animeNameRomaji")[0]).toggle(!engLang)
-        $(tr.getElementsByClassName("animeNameEnglish")[0]).toggle(engLang)
-        
         tbodyFrag.appendChild(tr);
+        
+        $(tr).data("song", song);
 
         song.players.forEach(playerNames.add, playerNames);
     }
