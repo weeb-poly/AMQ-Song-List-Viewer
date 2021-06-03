@@ -92,58 +92,55 @@ function updateRow(row) {
 
 function searchSongName(query) {
     $(".songData .songName").each((_index, elem) => {
-        let res = testRegex($(elem).text(), query);
-        $(elem).toggleClass("rowHidden", !res);
-        updateRow($(elem).parent());
+        let $elem = $(elem);
+        let res = testRegex($elem.text(), query);
+        $elem.toggleClass("rowHidden", !res);
+        updateRow($elem.parent());
     });
 }
 
 function searchArtist(query) {
     $(".songData .songArtist").each((_index, elem) => {
-        let res = testRegex($(elem).text(), query);
-        $(elem).toggleClass("rowHidden", !res);
-        updateRow($(elem).parent());
+        let $elem = $(elem);
+        let res = testRegex($elem.text(), query);
+        $elem.toggleClass("rowHidden", !res);
+        updateRow($elem.parent());
     });
 }
 
 function searchAnime(query) {
     $(".songData .animeNameRomaji").each((_index, elem) => {
-        if (testRegex($(elem).text(), query)) {
-            $(elem).removeClass("rowHidden");
-            $(elem).parent().find(".animeNameEnglish").removeClass("rowHidden");
+        let $elem = $(elem);
+        if (testRegex($elem.text(), query)) {
+            $elem.removeClass("rowHidden");
+            $elem.parent().find(".animeNameEnglish").removeClass("rowHidden");
         } else {
-            if (testRegex($(elem).parent().find(".animeNameEnglish").text(), query)) {
-                $(elem).removeClass("rowHidden");
-                $(elem).parent().find(".animeNameEnglish").removeClass("rowHidden");
+            if (testRegex($elem.parent().find(".animeNameEnglish").text(), query)) {
+                $elem.removeClass("rowHidden");
+                $elem.parent().find(".animeNameEnglish").removeClass("rowHidden");
             } else {
-                $(elem).parent().find(".animeNameEnglish").addClass("rowHidden");
-                $(elem).addClass("rowHidden");
+                $elem.parent().find(".animeNameEnglish").addClass("rowHidden");
+                $elem.addClass("rowHidden");
             }
         }
-        updateRow($(elem).parent());
+        updateRow($elem.parent());
     });
 }
 
 function updateTypes() {
+    const slTypeOpeningsUnchecked = $("#slTypeOpenings").hasClass("unchecked");
+    const slTypeEndingsUnchecked = $("#slTypeEndings").hasClass("unchecked");
+    const slTypeInsertsUnchecked = $("#slTypeEndings").hasClass("unchecked");
+
     $(".songData .songType").each((_index, elem) => {
-        if ($(elem).text().includes("Opening") && $("#slTypeOpenings").hasClass("unchecked")) {
-            $(elem).addClass("rowHidden");
+        let $elem = $(elem);
+        if ($elem.text().includes("Opening")) {
+            $elem.toggleClass("rowHidden", slTypeOpeningsUnchecked);
+        } else if ($elem.text().includes("Ending")) {
+            $elem.toggleClass("rowHidden", slTypeEndingsUnchecked);
+        } else if ($elem.text().includes("Insert")) {
+            $elem.toggleClass("rowHidden", slTypeInsertsUnchecked);
         }
-        else if ($(elem).text().includes("Opening") && !$("#slTypeOpenings").hasClass("unchecked")) {
-            $(elem).removeClass("rowHidden");
-        }
-        else if ($(elem).text().includes("Ending") && $("#slTypeEndings").hasClass("unchecked")) {
-            $(elem).addClass("rowHidden");
-        }
-        else if ($(elem).text().includes("Ending") && !$("#slTypeEndings").hasClass("unchecked")) {
-            $(elem).removeClass("rowHidden");
-        }
-        else if ($(elem).text().includes("Insert") && $("#slTypeInserts").hasClass("unchecked")) {
-            $(elem).addClass("rowHidden");
-        }
-        else {
-            $(elem).removeClass("rowHidden");
-        }
-        updateRow($(elem).parent())
-    })
+        updateRow($elem.parent())
+    });
 }
