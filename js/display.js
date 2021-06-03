@@ -100,8 +100,10 @@ function updateTableGuesses(playerName) {
     let slPlayerAnswersUnchecked = document.getElementById('slPlayerAnswers').classList.contains("unchecked");
     let slPlayerCorrectUnchecked = document.getElementById('slPlayerCorrect').classList.contains("unchecked");
 
+    let playerExists = false;
+    
     if (!slPlayerAnswersUnchecked) {
-        let playerExists = importData.some(
+        playerExists = importData.some(
             song => song.players.some(
                 player => (player.name === playerName)
             )
