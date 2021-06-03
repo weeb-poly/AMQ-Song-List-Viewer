@@ -14,82 +14,91 @@ function loadData() {
     clearScoreboard();
 
     $("tr.songData").remove();
+    
+    let songDataClick = function () {
+        let $this = $(this);
+        let isSelected = $this.hasClass("selected");
 
+        $(".selected").removeClass("selected");
+
+        if (!isSelected) {
+            updateScoreboard(song);
+            updateInfo(song);
+            $this.addClass("selected");
+        } else {
+            clearScoreboard();
+            clearInfo();
+        }
+    });
+
+    let tbodyFragment = $(document.createDocumentFragment());
+
+    let engLang = ($slAnimeTitleSelect.val() === "english");
+    
     for (let song of importData) {
         let guesses = song.players.filter(tmpPlayer => (tmpPlayer.correct === true));
 
         let guessesPercentage = (guesses.length / song.activePlayers * 100).toFixed(2);
 
-        $slTable.append(
-            $("<tr></tr>")
-                .addClass("songData")
-                .addClass("clickable")
-                .append($("<td></td>", {
-                    "class": "songNumber",
-                    text: song.songNumber
-                }))
-                .append($("<td></td>", {
-                    "class": "songName",
-                    text: song.name
-                }))
-                .append($("<td></td>", {
-                    "class": "songArtist",
-                    text: song.artist
-                }))
-                .append($("<td></td>", {
-                    "class": "animeNameRomaji",
-                    text: song.anime.romaji
-                }))
-                .append($("<td></td>", {
-                    "class": "animeNameEnglish",
-                    text: song.anime.english
-                }))
-                .append($("<td></td>", {
-                    "class": "songType",
-                    text: song.type
-                }))
-                .append($("<td></td>", {
-                    "class": "playerAnswer",
-                    text: "..."
-                }))
-                .append($("<td></td>", {
-                    "class": "guessesCounter",
-                    text: guesses.length + "/" + song.activePlayers + " (" + guessesPercentage + "%)"
-                }))
-                .append($("<td></td>", {
-                    "class": "samplePoint",
-                    text: formatSamplePoint(song.startSample, song.videoLength)
-                }))
-                .click(function () {
-                    let isSelected = $(this).hasClass("selected");
-
-                    $(".selected").removeClass("selected");
-
-                    if (!isSelected) {
-                        updateScoreboard(song);
-                        updateInfo(song);
-                        $(this).addClass("selected");
-                    } else {
-                        clearScoreboard();
-                        clearInfo();
-                    }
-                })
+        tbodyFragment.append(
+            $("<tr></tr>", {
+                "class": "songData clickable",
+                click: songDataClick
+            })
+            .append($("<td></td>", {
+                "class": "songNumber",
+                text: song.songNumber
+            }))
+            .append($("<td></td>", {
+                "class": "songName",
+                text: song.name
+            }))
+            .append($("<td></td>", {
+                "class": "songArtist",
+                text: song.artist
+            }))
+            .append($("<td></td>", {
+                "class": "animeNameRomaji",
+                text: song.anime.romaji
+            }).toggle(!engLang))
+            .append($("<td></td>", {
+                "class": "animeNameEnglish",
+                text: song.anime.english
+            }).toggle(engLang))
+            .append($("<td></td>", {
+                "class": "songType",
+                text: song.type
+            }))
+            .append($("<td></td>", {
+                "class": "playerAnswer",
+                text: "..."
+            }))
+            .append($("<td></td>", {
+                "class": "guessesCounter",
+                text: guesses.length + "/" + song.activePlayers + " (" + guessesPercentage + "%)"
+            }))
+            .append($("<td></td>", {
+                "class": "samplePoint",
+                text: formatSamplePoint(song.startSample, song.videoLength)
+            }))
         );
-
-        let engLang = ($slAnimeTitleSelect.val() === "english");
-        $(".animeNameEnglish").toggle(engLang);
-        $(".animeNameRomaji").toggle(!engLang);
 
         song.players.forEach(playerNames.add, playerNames);
     }
 
-    let $slPlayerList = $("#slPlayerList");
+    $("#slTable > tbody").append(tbodyFragment);
+    
+    let slPlayerListFragment = $(document.createDocumentFragment());
 
     playerNames.forEach((p1) => {
-        $slPlayerList.append(
-            $("<option></option>", { value: p1 })
+        slPlayerListFragment.append(
+            $("<option></option>", {
+                value: p1
+            })
         );
     });
+    
+    $("#slPlayerList").append(slPlayerListFragment);
 
     $(".playerAnswer").hide();
 
@@ -148,10 +157,12 @@ function updateTableGuesses(playerName) {
 }
 
 function updateScoreboard(song) {
-    let $slScoreboardContainer = $("#slScoreboardContainer");
     $(".slScoreboardEntry").remove();
+
+    let slScoreboardFragment = $(document.createDocumentFragment());
+    
     song.players.sort((a, b) => a.positionSlot - b.positionSlot).forEach((player) => {
-        $slScoreboardContainer.append(
+        slScoreboardFragment.append(
             $("<div></div>", {
                 "class": "slScoreboardEntry"
             })
@@ -188,8 +199,10 @@ function updateScoreboard(song) {
                     .toggleClass("self", $("#slPlayerName").val() === player.name)
                 )
             )
-        )
+        );
     });
+    
+    $("#slScoreboardContainer").append(slScoreboardFragment);
 }
 
 function updateScoreboardHighlight(name) {
