@@ -16,16 +16,16 @@ function loadData() {
     $("tr.songData").remove();
     
     let songDataClick = function () {
-        let $this = $(this);
-        let song = $this.data("song");
-        let isSelected = $this.hasClass("selected");
+        let isSelected = this.classList.contains("selected");
 
         $(".selected").removeClass("selected");
+        
+        let song = $(this).data("song");
 
         if (!isSelected) {
             updateScoreboard(song);
             updateInfo(song);
-            $this.addClass("selected");
+            this.classList.add("selected");
         } else {
             clearScoreboard();
             clearInfo();
@@ -97,43 +97,49 @@ function formatSamplePoint(start, length) {
 }
 
 function updateTableGuesses(playerName) {
-    let playerExists = false;
+    let slPlayerAnswersUnchecked = document.getElementById('slPlayerAnswers').classList.contains("unchecked");
+    let slPlayerCorrectUnchecked = document.getElementById('slPlayerCorrect').classList.contains("unchecked");
 
-    let slPlayerAnswers = document.getElementById('slPlayerAnswers');
-    let slPlayerCorrect = document.getElementById('slPlayerCorrect');
+    if (!slPlayerAnswersUnchecked) {
+        let playerExists = importData.some(
+            song => song.players.some(
+                player => (player.name === playerName)
+            )
+        );
+    }
+
+    let hideAnswers = !playerExists || slPlayerAnswersUnchecked;
 
     for (let i = 0; i < importData.length; i++) {
-        let findPlayer = importData[i].players.find(
-            player => (player.name === playerName)
-        );
-
         let songData = document.querySelectorAll("tr.songData")[i];
-        let playerAnswer = songData.getElementsByClassName("playerAnswer");
-
-        if (findPlayer !== undefined) {
-            playerExists = true;
-            if (!(slPlayerAnswers.classList.contains("unchecked"))) {
-                playerAnswer.innerText = findPlayer.answer;
-                $(".playerAnswer").show();
-            } else {
-                $(".playerAnswer").hide();
-            }
-
-            if (findPlayer.active === true && !(slPlayerCorrect.classList.contains("unchecked"))) {
-                songData.classList.add(findPlayer.correct === true ? "rightAnswerTable" : "wrongAnswerTable");
-            } else {
-                songData.classList.remove("rightAnswerTable", "wrongAnswerTable");
-            }
-        } else {
-            songData.classList.remove("rightAnswerTable", "wrongAnswerTable");
-            playerAnswer.innerText = "...";
-            if (!playerExists || slPlayerAnswers.classList.contains("unchecked")) {
-                $(".playerAnswer").hide();
-            }
-        }
-
+        updateSongGuesses(importData[i], songData, hideAnswers, slPlayerCorrectUnchecked);
     }
 }
+
+
+function updateSongGuesses(song, tr, hideAnswers, slPlayerCorrectUnchecked) {
+    let findPlayer = song.players.find(
+        player => (player.name === playerName)
+    );
+
+    let playerAnswer = tr.getElementsByClassName("playerAnswer");
+
+    playerAnswer.style.display = hideAnswers ? 'none' : '';
+
+    if (findPlayer !== undefined) {
+        playerAnswer.innerText = findPlayer.answer;
+
+        if (findPlayer.active === true && !slPlayerCorrectUnchecked) {
+            tr.classList.add(findPlayer.correct === true ? "rightAnswerTable" : "wrongAnswerTable");
+        } else {
+            tr.classList.remove("rightAnswerTable", "wrongAnswerTable");
+        }
+    } else {
+        tr.classList.remove("rightAnswerTable", "wrongAnswerTable");
+        playerAnswer.innerText = "...";
+    }
+}
+
 
 function updateScoreboard(song) {
     $(".slScoreboardEntry").remove();
