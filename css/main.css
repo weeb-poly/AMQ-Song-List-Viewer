@@ -173,9 +173,11 @@ body {
     font-size: 14px;
     line-height: 20px;
 }
+thead > tr,
 tr.header {
     height: 30px;
 }
+thead > tr > td,
 tr.header > td {
     font-weight: bold;
     border: 1px solid black;
