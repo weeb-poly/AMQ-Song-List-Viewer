@@ -2,56 +2,60 @@ let importData = {};
 let playerNames = new Set();
 
 function setup() {
-    let $slImportButton = $("#slImportButton");
-    let $slImport = $("#slImport");
-    let $slSearchSongName = $("#slSearchSongName");
-    let $slSearchArtist = $("#slSearchArtist");
-    let $slSearchAnime = $("#slSearchAnime");
-    let $slAnimeTitleSelect = $("#slAnimeTitleSelect");
-    let $slPlayerName = $("#slPlayerName");
+    const slImportButton = document.getElementById("slImportButton");
+    const slImport = document.getElementById("slImport");
+    const slSearchSongName = document.getElementById("slSearchSongName");
+    const slSearchArtist = document.getElementById("slSearchArtist");
+    const slSearchAnime = document.getElementById("slSearchAnime");
+    const slAnimeTitleSelect = document.getElementById("slAnimeTitleSelect");
+    const slPlayerName = document.getElementById("slPlayerName");
 
-    $slImportButton.click(() => {
-        $slImport.trigger("click");
-    });
-    $slSearchSongName.on("input", function () {
-        searchSongName($(this).val());
-    });
-    $slSearchArtist.on("input", function () {
-        searchArtist($(this).val());
-    });
-    $slSearchAnime.on("input", function () {
-        searchAnime($(this).val());
+    const slInfo = document.getElementById("slInfo");
+    const slScoreboard = document.getElementById("slScoreboard");  
+
+    slImportButton.addEventListener("click", () => {
+        slImport.click();
     });
 
-    $slAnimeTitleSelect.on("change", function () {
-        let engLang = ($(this).val() === "english");
+    slSearchSongName.addEventListener("input", function () {
+        searchSongName(this.value);
+    });
+    slSearchArtist.addEventListener("input", function () {
+        searchArtist(this.value);
+    });
+    slSearchAnime.addEventListener("input", function () {
+        searchAnime(this.value);
+    });
+
+    slAnimeTitleSelect.addEventListener("change", function () {
+        let engLang = (this.value === "english");
         $(".animeNameEnglish").toggle(engLang);
         $(".animeNameRomaji").toggle(!engLang);
     });
 
-    $slPlayerName.on("input", function () {
-        updateScoreboardHighlight($(this).val());
-        updateTableGuesses($(this).val());
+    slPlayerName.addEventListener("input", function () {
+        updateScoreboardHighlight(this.value);
+        updateTableGuesses(this.value);
     });
 
-    $slImport.on("change", function () {
-        let file = $(this).get(0).files[0];
+    slImport.addEventListener("change", function () {
+        let file = this.files[0];
         if (!file) {
             alert("Please select a file");
         } else {
             let reader = new FileReader();
             reader.onload = function () {
                 try {
-                    $("#slInfo").hide();
-                    $("#slScoreboard").hide();
+                    slInfo.style.display = 'none';
+                    slScoreboard.style.display = 'none';
 
                     importData = JSON.parse(reader.result);
 
                     loadData();
 
-                    searchAnime($slSearchAnime.val());
-                    searchArtist($slSearchArtist.val());
-                    searchSongName($slSearchSongName.val());
+                    searchAnime(slSearchAnime.value);
+                    searchArtist(slSearchArtist.value);
+                    searchSongName(slSearchSongName.value);
                     updateTypes();
                 }
                 catch (e) {
@@ -65,12 +69,12 @@ function setup() {
             }
             reader.readAsText(file);
         }
-    })
+    });
 
     $(".filterCheckbox").click(function () {
-        $(this).toggleClass("unchecked");
+        this.classList.toggle("unchecked");
         updateTypes();
-        updateTableGuesses($slPlayerName.val());
+        updateTableGuesses(slPlayerName.value);
     });
 }
 
