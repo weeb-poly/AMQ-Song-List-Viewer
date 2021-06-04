@@ -91,9 +91,9 @@ function updateRow(row) {
 }
 
 function searchSongName(query) {
-    const rows = document.getElementsByClassName('songData');
+    //const rows = document.getElementsByClassName('songData');
 
-    rows.forEach(row => {
+    songData.forEach(row => {
         const elem = row.getElementsByClassName('songName')[0];
 
         let res = testRegex(elem.innerText, query);
@@ -104,9 +104,9 @@ function searchSongName(query) {
 }
 
 function searchArtist(query) {
-    const rows = document.getElementsByClassName('songData');
+    //const rows = document.getElementsByClassName('songData');
 
-    rows.forEach(row => {
+    songData.forEach(row => {
         const elem = row.getElementsByClassName('songArtist')[0];
 
         let res = testRegex(elem.innerText, query);
@@ -117,9 +117,9 @@ function searchArtist(query) {
 }
 
 function searchAnime(query) {
-    const rows = document.getElementsByClassName('songData');
+    //const rows = document.getElementsByClassName('songData');
 
-    rows.forEach(row => {
+    songData.forEach(row => {
         let animeNameRomaji = row.getElementsByClassName("animeNameRomaji")[0];
         let animeNameEnglish = row.getElementsByClassName("animeNameEnglish")[0];
 
@@ -147,9 +147,9 @@ function updateTypes() {
     const slTypeEndingsUnchecked = slTypeEndings.classList.contains("unchecked");
     const slTypeInsertsUnchecked = slTypeInserts.classList.contains("unchecked");
 
-    const rows = document.getElementsByClassName('songData');
+    //const rows = document.getElementsByClassName('songData');
 
-    rows.forEach(row => {
+    songData.forEach(row => {
         const elem = row.getElementsByClassName('songType')[0];
 
         if (elem.innerText.includes("Opening")) {
