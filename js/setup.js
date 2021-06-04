@@ -1,5 +1,6 @@
 let importData = {};
 let playerNames = new Set();
+let songData;
 
 function setup() {
     const slImportButton = document.getElementById("slImportButton");
@@ -14,6 +15,8 @@ function setup() {
     const slScoreboard = document.getElementById("slScoreboard");  
     
     const slTable = document.getElementById("slTable");
+    
+    songData = document.getElementsByClassName('songData');
 
     slImportButton.addEventListener("click", () => {
         slImport.click();
@@ -55,9 +58,15 @@ function setup() {
 
                     loadData();
 
-                    searchAnime(slSearchAnime.value);
-                    searchArtist(slSearchArtist.value);
-                    searchSongName(slSearchSongName.value);
+                    songData = document.getElementsByClassName('songData');
+
+                    slSearchAnime.dispatchEvent(new Event('input'));
+                    //searchAnime(slSearchAnime.value);
+                    slSearchArtist.dispatchEvent(new Event('input'));
+                    //searchArtist(slSearchArtist.value);
+                    slSearchSongName.dispatchEvent(new Event('input'));
+                    //searchSongName(slSearchSongName.value);
+
                     updateTypes();
                 }
                 catch (e) {
