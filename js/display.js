@@ -2,7 +2,7 @@ function loadData() {
     playerNames.clear();
 
     let $slTable = $("#slTable");
-    let $slAnimeTitleSelect = $("#slAnimeTitleSelect");
+    //let $slAnimeTitleSelect = $("#slAnimeTitleSelect");
 
     $("#slPlayerList > option").remove();
     $("#slTableContainer").show();
@@ -32,7 +32,7 @@ function loadData() {
         }
     };
 
-    let engLang = ($slAnimeTitleSelect.val() === "english");
+    //let engLang = ($slAnimeTitleSelect.val() === "english");
 
     let tbodyFrag = document.createDocumentFragment();
 
@@ -51,9 +51,9 @@ function loadData() {
         tr.getElementsByClassName("songName")[0].innerText = song.name;
         tr.getElementsByClassName("songArtist")[0].innerText = song.artist;
         tr.getElementsByClassName("animeNameRomaji")[0].innerText = song.anime.romaji;
-        tr.getElementsByClassName("animeNameRomaji")[0].style.display = engLang ? 'none' : '';
+        //tr.getElementsByClassName("animeNameRomaji")[0].style.display = engLang ? 'none' : '';
         tr.getElementsByClassName("animeNameEnglish")[0].innerText = song.anime.english;
-        tr.getElementsByClassName("animeNameEnglish")[0].style.display = engLang ? '' : 'none';
+        //tr.getElementsByClassName("animeNameEnglish")[0].style.display = engLang ? '' : 'none';
         tr.getElementsByClassName("songType")[0].innerText = song.type;
         tr.getElementsByClassName("playerAnswer")[0].innerText = "...";
         tr.getElementsByClassName("guessesCounter")[0].innerText = guesses.length + "/" + song.activePlayers + " (" + guessesPercentage + "%)";
