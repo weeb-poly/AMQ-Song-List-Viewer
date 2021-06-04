@@ -12,6 +12,8 @@ function setup() {
 
     const slInfo = document.getElementById("slInfo");
     const slScoreboard = document.getElementById("slScoreboard");  
+    
+    const slTable = document.getElementById("slTable");
 
     slImportButton.addEventListener("click", () => {
         slImport.click();
@@ -29,8 +31,8 @@ function setup() {
 
     slAnimeTitleSelect.addEventListener("change", function () {
         let engLang = (this.value === "english");
-        $(".animeNameEnglish").toggle(engLang);
-        $(".animeNameRomaji").toggle(!engLang);
+        slTable.classList.toggle("hideEnglishName", !engLang);
+        slTable.classList.toggle("hideRomajiName", engLang);
     });
 
     slPlayerName.addEventListener("input", function () {
