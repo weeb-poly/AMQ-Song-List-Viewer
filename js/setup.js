@@ -73,9 +73,13 @@ function setup() {
         }
     });
 
-    $(".filterCheckbox").click(function () {
+    $("#slHeaderFilter .filterCheckbox").click(function () {
         this.classList.toggle("unchecked");
         updateTypes();
+    });
+
+    $("#slHeaderPlayer .filterCheckbox").click(function () {
+        this.classList.toggle("unchecked");
         updateTableGuesses(slPlayerName.value);
     });
 }
