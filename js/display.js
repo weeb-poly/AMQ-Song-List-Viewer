@@ -1,31 +1,36 @@
 function loadData() {
     playerNames.clear();
 
-    let $slTable = $("#slTable");
-    //let $slAnimeTitleSelect = $("#slAnimeTitleSelect");
+    const slTable = document.getElementById("slTable");
+    const slPlayerList = document.getElementById("slPlayerList");
+    const slTableContainer = document.getElementById("slTableContainer");
+    const slScoreboard = document.getElementById("slScoreboard");
+    const slInfo = document.getElementById("slInfo");
 
-    $("#slPlayerList > option").remove();
-    $("#slTableContainer").show();
-    $slTable.show();
-    $("#slScoreboard").show();
-    $("#slInfo").show();
+    $(slPlayerList).find("> option").remove();
+    slTableContainer.style.display = '';
+    slTable.style.display = '';
+    slScoreboard.style.display = '';
+    slInfo.style.display = '';
 
     clearInfo();
     clearScoreboard();
 
-    $("tr.songData").remove();
-    
-    let songDataClick = function () {
-        let isSelected = this.classList.contains("selected");
+    $(slTable).find("tr.songData").remove();
 
-        $(".selected").removeClass("selected");
-        
-        let song = $(this).data("song");
+    let songDataClick = function () {
+        const isSelected = this.classList.contains("selected");
+
+        const prevSelected = document.getElementsByClassName("selected")[0];
+
+        prevSelected.classList.remove("selected");
 
         if (!isSelected) {
+            this.classList.add("selected");
+ 
+            const song = $(this).data("song");
             updateScoreboard(song);
             updateInfo(song);
-            this.classList.add("selected");
         } else {
             clearScoreboard();
             clearInfo();
@@ -60,27 +65,29 @@ function loadData() {
         tr.getElementsByClassName("samplePoint")[0].innerText = formatSamplePoint(song.startSample, song.videoLength);
 
         tbodyFrag.appendChild(tr);
-        
+
         $(tr).data("song", song);
 
         song.players.forEach(playerNames.add, playerNames);
     }
 
-    $("#slTable > tbody").append($(tbodyFrag));
-    
+    const tbody = slTable.getElementsByTagName("tbody")[0];
+    tbody.appendChild(tbodyFrag);
+
     let slPlayerListFrag = document.createDocumentFragment();
 
-    playerNames.forEach((p1) => {
+    playerNames.forEach(playerName => {
         let opt = document.createElement("option");
-        opt.value = p1;
+        opt.value = playerName; // I think this might be part of the issue
         slPlayerListFrag.appendChild(opt);
     });
 
-    $("#slPlayerList").append($(slPlayerListFrag));
+    slPlayerList.appendChild(slPlayerListFrag);
 
     $(".playerAnswer").hide();
 
-    let playerName = $("#slPlayerName").val();
+    const slPlayerName = document.getElementById("slPlayerName");
+    const playerName = slPlayerName.value;
 
     updateTableGuesses(playerName);
     updateScoreboardHighlight(playerName);
@@ -97,8 +104,11 @@ function formatSamplePoint(start, length) {
 }
 
 function updateTableGuesses(playerName) {
-    let slPlayerAnswersUnchecked = document.getElementById('slPlayerAnswers').classList.contains("unchecked");
-    let slPlayerCorrectUnchecked = document.getElementById('slPlayerCorrect').classList.contains("unchecked");
+    let slPlayerAnswers = document.getElementById('slPlayerAnswers');
+    let slPlayerCorrect = document.getElementById('slPlayerCorrect');
+    
+    let slPlayerAnswersUnchecked = slPlayerAnswers.classList.contains("unchecked");
+    let slPlayerCorrectUnchecked = slPlayerCorrect.classList.contains("unchecked");
 
     let playerExists = false;
     
@@ -188,14 +198,14 @@ function updateScoreboard(song) {
             )
         );
     });
-    
+
     $("#slScoreboardContainer").append(slScoreboardFragment);
 }
 
 function updateScoreboardHighlight(name) {
     $(".slScoreboardEntry").each((_index, elem) => {
-        var $slScoreboardName = $(elem).find(".slScoreboardName");
-        var addSelf = ($slScoreboardName.text() === name);
+        const $slScoreboardName = $(elem).find(".slScoreboardName");
+        const addSelf = ($slScoreboardName.text() === name);
         $slScoreboardName.toggleClass("self", addSelf);
     });
 }
@@ -372,7 +382,8 @@ function updateInfo(song) {
 }
 
 function clearInfo() {
-    $("#slInfoBody").children().remove();
+    const slInfoBody = document.getElementById("slInfoBody");
+    slInfoBody.replaceChildren();
 }
 
 function clearScoreboard() {
