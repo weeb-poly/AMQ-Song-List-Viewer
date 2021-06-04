@@ -74,10 +74,9 @@ function escapeRegExp(str) {
 }
 
 function createRegExp(query) {
-    let escapedQuery = escapeRegExp(query);
-    REGEX_REPLACE_RULES.forEach((rule) => {
-        escapedQuery = escapedQuery.replace(new RegExp(rule.input, "gi"), rule.replace);
-    });
+    let escapedQuery = REGEX_REPLACE_RULES.reduce((query, rule) => {
+        return query.replace(new RegExp(rule.input, "gi"), rule.replace);
+    }, escapeRegExp(query));
     return new RegExp(escapedQuery, "i");
 }
 
@@ -86,61 +85,81 @@ function testRegex(value, query) {
 }
 
 function updateRow(row) {
-    let showRow = (row.find(".rowHidden").length === 0 || row.hasClass("rowHidden"));
-    row.toggle(showRow);
+    let showRow = row.classList.contains("rowHidden");
+    showRow = showRow || row.getElementsByClassName("rowHidden").length === 0;
+    row.style.display = showRow ? '' : 'none';
 }
 
 function searchSongName(query) {
-    $(".songData .songName").each((_index, elem) => {
-        let $elem = $(elem);
-        let res = testRegex($elem.text(), query);
-        $elem.toggleClass("rowHidden", !res);
-        updateRow($elem.parent());
+    const rows = document.getElementsByClassName('songData');
+
+    rows.forEach(row => {
+        const elem = row.getElementsByClassName('songName')[0];
+
+        let res = testRegex(elem.innerText, query);
+        elem.classList.toggle("rowHidden", !res);
+
+        updateRow(row);
     });
 }
 
 function searchArtist(query) {
-    $(".songData .songArtist").each((_index, elem) => {
-        let $elem = $(elem);
-        let res = testRegex($elem.text(), query);
-        $elem.toggleClass("rowHidden", !res);
-        updateRow($elem.parent());
+    const rows = document.getElementsByClassName('songData');
+
+    rows.forEach(row => {
+        const elem = row.getElementsByClassName('songArtist')[0];
+
+        let res = testRegex(elem.innerText, query);
+        elem.classList.toggle("rowHidden", !res);
+
+        updateRow(row);
     });
 }
 
 function searchAnime(query) {
-    $(".songData .animeNameRomaji").each((_index, elem) => {
-        let $elem = $(elem);
-        if (testRegex($elem.text(), query)) {
-            $elem.removeClass("rowHidden");
-            $elem.parent().find(".animeNameEnglish").removeClass("rowHidden");
-        } else {
-            if (testRegex($elem.parent().find(".animeNameEnglish").text(), query)) {
-                $elem.removeClass("rowHidden");
-                $elem.parent().find(".animeNameEnglish").removeClass("rowHidden");
-            } else {
-                $elem.parent().find(".animeNameEnglish").addClass("rowHidden");
-                $elem.addClass("rowHidden");
-            }
+    const rows = document.getElementsByClassName('songData');
+
+    rows.forEach(row => {
+        let animeNameRomaji = row.getElementsByClassName("animeNameRomaji")[0];
+        let animeNameEnglish = row.getElementsByClassName("animeNameEnglish")[0];
+
+        let hideRow = true;
+        
+        if (testRegex(animeNameRomaji.innerText, query)) {
+            hideRow = false;
+        } else if (testRegex(animeNameEnglish.innerText, query)) {
+            hideRow = false;
         }
-        updateRow($elem.parent());
+
+        animeNameRomaji.classList.toggle("rowHidden", hideRow);
+        animeNameEnglish.classList.remove("rowHidden", hideRow);
+
+        updateRow(row);
     });
 }
 
 function updateTypes() {
-    const slTypeOpeningsUnchecked = $("#slTypeOpenings").hasClass("unchecked");
-    const slTypeEndingsUnchecked = $("#slTypeEndings").hasClass("unchecked");
-    const slTypeInsertsUnchecked = $("#slTypeEndings").hasClass("unchecked");
+    const slTypeOpenings = document.getElementById("slTypeOpenings");
+    const slTypeEndings = document.getElementById("slTypeEndings");
+    const slTypeInserts = document.getElementById("slTypeEndings");
 
-    $(".songData .songType").each((_index, elem) => {
-        let $elem = $(elem);
-        if ($elem.text().includes("Opening")) {
-            $elem.toggleClass("rowHidden", slTypeOpeningsUnchecked);
-        } else if ($elem.text().includes("Ending")) {
-            $elem.toggleClass("rowHidden", slTypeEndingsUnchecked);
-        } else if ($elem.text().includes("Insert")) {
-            $elem.toggleClass("rowHidden", slTypeInsertsUnchecked);
+    const slTypeOpeningsUnchecked = slTypeOpenings.classList.contains("unchecked");
+    const slTypeEndingsUnchecked = slTypeEndings.classList.contains("unchecked");
+    const slTypeInsertsUnchecked = slTypeInserts.classList.contains("unchecked");
+
+    const rows = document.getElementsByClassName('songData');
+
+    rows.forEach(row => {
+        const elem = row.getElementsByClassName('songType')[0];
+
+        if (elem.innerText.includes("Opening")) {
+            elem.classList.toggle("rowHidden", slTypeOpeningsUnchecked);
+        } else if (elem.innerText.includes("Ending")) {
+            elem.classList.toggle("rowHidden", slTypeEndingsUnchecked);
+        } else if (elem.innerText.includes("Insert")) {
+            elem.classList.toggle("rowHidden", slTypeInsertsUnchecked);
         }
-        updateRow($elem.parent())
+
+        updateRow(row);
     });
 }
