@@ -173,6 +173,12 @@ body {
     font-size: 14px;
     line-height: 20px;
 }
+#slTable.hideEnglishName td.animeNameEnglish {
+    display: none;
+}
+#slTable.hideRomajiName td.animeNameRomaji {
+    display: none;
+}
 thead > tr,
 tr.header {
     height: 30px;
