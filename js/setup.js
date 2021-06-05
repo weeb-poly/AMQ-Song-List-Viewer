@@ -20,16 +20,13 @@ function setup() {
     });
 
     slSearchSongName.addEventListener("input", function () {
-        const songData = document.getElementsByClassName('songData');
-        searchSongName(this.value, songData);
+        searchSongName(this.value);
     });
     slSearchArtist.addEventListener("input", function () {
-        const songData = document.getElementsByClassName('songData');
-        searchArtist(this.value, songData);
+        searchArtist(this.value);
     });
     slSearchAnime.addEventListener("input", function () {
-        const songData = document.getElementsByClassName('songData');
-        searchAnime(this.value, songData);
+        searchAnime(this.value);
     });
 
     slAnimeTitleSelect.addEventListener("change", function () {
