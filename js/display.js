@@ -85,7 +85,7 @@ function loadData() {
 
     $(slPlayerList).append($(slPlayerListFrag));
 
-    $(".playerAnswer").hide();
+    //$(".playerAnswer").hide();
 
     const slPlayerName = document.getElementById("slPlayerName");
     const playerName = slPlayerName.value;
