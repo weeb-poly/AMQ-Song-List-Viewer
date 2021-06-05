@@ -54,18 +54,12 @@ function setup() {
             let reader = new FileReader();
             reader.onload = function () {
                 try {
-                    slInfo.style.display = 'none';
-                    slScoreboard.style.display = 'none';
-
                     importData = JSON.parse(reader.result);
 
                     loadData();
 
-                    //slSearchAnime.dispatchEvent(new Event('input'));
                     searchAnime(slSearchAnime.value);
-                    //slSearchArtist.dispatchEvent(new Event('input'));
                     searchArtist(slSearchArtist.value);
-                    //slSearchSongName.dispatchEvent(new Event('input'));
                     searchSongName(slSearchSongName.value);
 
                     updateTypes();
