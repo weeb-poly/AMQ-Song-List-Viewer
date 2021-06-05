@@ -10,8 +10,8 @@ function loadData() {
     $(slPlayerList).find("> option").remove();
     slTableContainer.style.display = '';
     slTable.style.display = '';
-    //slScoreboard.style.display = '';
-    //slInfo.style.display = '';
+    slScoreboard.style.display = '';
+    slInfo.style.display = '';
 
     clearInfo();
     clearScoreboard();
