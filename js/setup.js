@@ -1,6 +1,5 @@
 let importData = {};
 let playerNames = new Set();
-let songData;
 
 function setup() {
     const slImportButton = document.getElementById("slImportButton");
@@ -15,21 +14,22 @@ function setup() {
     //const slScoreboard = document.getElementById("slScoreboard");  
     
     const slTable = document.getElementById("slTable");
-    
-    songData = document.getElementsByClassName('songData');
 
     slImportButton.addEventListener("click", () => {
         slImport.click();
     });
 
     slSearchSongName.addEventListener("input", function () {
-        searchSongName(this.value);
+        const songData = document.getElementsByClassName('songData');
+        searchSongName(this.value, songData);
     });
     slSearchArtist.addEventListener("input", function () {
-        searchArtist(this.value);
+        const songData = document.getElementsByClassName('songData');
+        searchArtist(this.value, songData);
     });
     slSearchAnime.addEventListener("input", function () {
-        searchAnime(this.value);
+        const songData = document.getElementsByClassName('songData');
+        searchAnime(this.value, songData);
     });
 
     slAnimeTitleSelect.addEventListener("change", function () {
@@ -57,8 +57,6 @@ function setup() {
                     importData = JSON.parse(reader.result);
 
                     loadData();
-
-                    songData = document.getElementsByClassName('songData');
 
                     //slSearchAnime.dispatchEvent(new Event('input'));
                     searchAnime(slSearchAnime.value);
