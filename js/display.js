@@ -22,8 +22,10 @@ function loadData() {
         const isSelected = this.classList.contains("selected");
 
         const prevSelected = document.getElementsByClassName("selected")[0];
-
-        prevSelected.classList.remove("selected");
+        
+        if (prevSelected !== undefined) {
+            prevSelected.classList.remove("selected");
+        }
 
         if (!isSelected) {
             this.classList.add("selected");
