@@ -45,7 +45,7 @@ function loadData() {
 
     let trTemplate = document.getElementById("slTableDataTemplate");
 
-    for (let song of importData) {
+    importData.forEach((song, idx) => {
         let guesses = song.players.filter(tmpPlayer => (tmpPlayer.correct === true));
 
         let guessesPercentage = (guesses.length / song.activePlayers * 100).toFixed(2);
@@ -69,11 +69,12 @@ function loadData() {
         tbodyFrag.appendChild(tr);
 
         $(tr).data("song", song);
+        tr.dataset.index = idx;
 
         song.players.forEach(player => {
             playerNames.add(player.name);
         });
-    }
+    });
 
     const tbody = slTable.getElementsByTagName("tbody")[0];
     tbody.appendChild(tbodyFrag);
