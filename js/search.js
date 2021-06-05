@@ -103,7 +103,7 @@ function searchSongName(query) {
     });
 }
 
-function searchArtist(query, songData) {
+function searchArtist(query) {
     const songData = document.getElementsByClassName('songData');
 
     Array.from(songData).forEach(row => {
@@ -116,7 +116,7 @@ function searchArtist(query, songData) {
     });
 }
 
-function searchAnime(query, songData) {
+function searchAnime(query) {
     const songData = document.getElementsByClassName('songData');
 
     Array.from(songData).forEach(row => {
