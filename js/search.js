@@ -80,23 +80,22 @@ function createRegExp(query) {
     return new RegExp(escapedQuery, "i");
 }
 
-function testRegex(value, query) {
-    return createRegExp(query).test(value);
-}
-
 function updateRow(row) {
-    let showRow = row.classList.contains("rowHidden");
-    showRow = showRow || row.getElementsByClassName("rowHidden").length === 0;
+    //let showRow = row.classList.contains("rowHidden");
+    //showRow = showRow || row.getElementsByClassName("rowHidden").length === 0;
+    const showRow = row.getElementsByClassName("rowHidden").length === 0;
     row.style.display = showRow ? '' : 'none';
 }
 
 function searchSongName(query) {
     const songData = document.getElementsByClassName('songData');
 
+    const regexp = createRegExp(query);
+    
     Array.from(songData).forEach(row => {
         const elem = row.getElementsByClassName('songName')[0];
 
-        let res = testRegex(elem.innerText, query);
+        let res = regexp.test(elem.innerText);
         elem.classList.toggle("rowHidden", !res);
 
         updateRow(row);
@@ -106,10 +105,12 @@ function searchSongName(query) {
 function searchArtist(query) {
     const songData = document.getElementsByClassName('songData');
 
+    const regexp = createRegExp(query);
+
     Array.from(songData).forEach(row => {
         const elem = row.getElementsByClassName('songArtist')[0];
 
-        let res = testRegex(elem.innerText, query);
+        let res = regexp.test(elem.innerText);
         elem.classList.toggle("rowHidden", !res);
 
         updateRow(row);
@@ -119,15 +120,17 @@ function searchArtist(query) {
 function searchAnime(query) {
     const songData = document.getElementsByClassName('songData');
 
+    const regexp = createRegExp(query);
+    
     Array.from(songData).forEach(row => {
         let animeNameRomaji = row.getElementsByClassName("animeNameRomaji")[0];
         let animeNameEnglish = row.getElementsByClassName("animeNameEnglish")[0];
 
         let hideRow = true;
         
-        if (testRegex(animeNameRomaji.innerText, query)) {
+        if (regexp.test(animeNameRomaji.innerText)) {
             hideRow = false;
-        } else if (testRegex(animeNameEnglish.innerText, query)) {
+        } else if (regexp.test(animeNameEnglish.innerText)) {
             hideRow = false;
         }
 
