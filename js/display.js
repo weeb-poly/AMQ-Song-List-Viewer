@@ -29,8 +29,11 @@ function loadData() {
 
         if (!isSelected) {
             this.classList.add("selected");
+            
+            const index = this.dataset.index;
+
+            const song = importData[index];
  
-            const song = $(this).data("song");
             updateScoreboard(song);
             updateInfo(song);
         } else {
@@ -127,9 +130,10 @@ function updateTableGuesses(playerName) {
 
     let hideAnswers = !playerExists || slPlayerAnswersUnchecked;
 
+    let songDatas = document.querySelectorAll("tbody tr.songData");
+    
     for (let i = 0; i < importData.length; i++) {
-        let songData = document.querySelectorAll("tr.songData")[i];
-        updateSongGuesses(importData[i], songData, playerName, hideAnswers, slPlayerCorrectUnchecked);
+        updateSongGuesses(importData[i], songDatas[i], playerName, hideAnswers, slPlayerCorrectUnchecked);
     }
 }
 
