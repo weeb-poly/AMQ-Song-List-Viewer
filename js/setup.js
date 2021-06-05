@@ -10,8 +10,8 @@ function setup() {
     const slAnimeTitleSelect = document.getElementById("slAnimeTitleSelect");
     const slPlayerName = document.getElementById("slPlayerName");
 
-    //const slInfo = document.getElementById("slInfo");
-    //const slScoreboard = document.getElementById("slScoreboard");  
+    const slInfo = document.getElementById("slInfo");
+    const slScoreboard = document.getElementById("slScoreboard");  
     
     const slTable = document.getElementById("slTable");
 
@@ -48,8 +48,8 @@ function setup() {
             let reader = new FileReader();
             reader.onload = function () {
                 try {
-                    //slInfo.style.display = 'none';
-                    //slScoreboard.style.display = 'none';
+                    slInfo.style.display = 'none';
+                    slScoreboard.style.display = 'none';
 
                     importData = JSON.parse(reader.result);
 
