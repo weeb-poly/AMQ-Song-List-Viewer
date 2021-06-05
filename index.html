@@ -10,6 +10,7 @@
         <script src="js/search.js"></script>
         <link rel="stylesheet" type="text/css" href="css/main.css" />
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
+
         <template id="slTableDataTemplate">
             <tr class="songData clickable">
                 <td class="songNumber"></td>
@@ -101,20 +102,19 @@
             </div>
         </div>
         <div id="slMain">
-            <div id="slScoreboard">
+            <div id="slScoreboard" style="display: none;">
                 <div>
                     <h3>Standings</h3>
                 </div>
                 <div id="slScoreboardContainer">
-                    
                 </div>
             </div>
-            <div id="slTableContainer">
+            <div id="slTableContainer" style="display: none;">
                 <div id="slTableHeader">
                     <h2>Song List</h2>
                 </div>
                 <div id="slTableBody">
-                    <table id="slTable" class="hideRomajiName">
+                    <table id="slTable" class="hideRomajiName" style="display: none;">
                         <thead>
                             <tr class="header">
                                 <td class="songNumber">Number</td>
@@ -128,12 +128,11 @@
                                 <td class="samplePoint">Sample</td>
                             </tr>
                         </thead>
-                        <tbody>
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
             </div>
-            <div id="slInfo">
+            <div id="slInfo" style="display: none;">
                 <div id="slInfoHeader">
                     <h2>Song Info</h2>
                 </div>
@@ -163,9 +162,7 @@
                     <div class="slInfoRow">
                         <div id="slInfoUrls">
                             <h5>URLs</h5>
-                            <ul>
-                            
-                            </ul>
+                            <ul></ul>
                         </div>
                     </div>
                     <div class="slInfoRow">
@@ -174,9 +171,7 @@
                         </div>
                         <div id="slInfoFromList">
                             <h5>From Lists</h5>
-                            <ul>
-                                
-                            </ul>
+                            <ul></ul>
                         </div>
                     </div>
                 </div>
