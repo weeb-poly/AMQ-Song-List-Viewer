@@ -90,7 +90,7 @@ function updateRow(row) {
     row.style.display = showRow ? '' : 'none';
 }
 
-function searchSongName(query) {
+function searchSongName(query, songData) {
     //const rows = document.getElementsByClassName('songData');
 
     songData.forEach(row => {
@@ -103,7 +103,7 @@ function searchSongName(query) {
     });
 }
 
-function searchArtist(query) {
+function searchArtist(query, songData) {
     //const rows = document.getElementsByClassName('songData');
 
     songData.forEach(row => {
@@ -116,7 +116,7 @@ function searchArtist(query) {
     });
 }
 
-function searchAnime(query) {
+function searchAnime(query, songData) {
     //const rows = document.getElementsByClassName('songData');
 
     songData.forEach(row => {
@@ -138,7 +138,7 @@ function searchAnime(query) {
     });
 }
 
-function updateTypes() {
+function updateTypes(songData) {
     const slTypeOpenings = document.getElementById("slTypeOpenings");
     const slTypeEndings = document.getElementById("slTypeEndings");
     const slTypeInserts = document.getElementById("slTypeEndings");
