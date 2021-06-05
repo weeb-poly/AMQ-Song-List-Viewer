@@ -70,7 +70,9 @@ function loadData() {
 
         $(tr).data("song", song);
 
-        song.players.forEach(playerNames.add, playerNames);
+        song.players.forEach(player => {
+            playerNames.add(player.name);
+        });
     }
 
     const tbody = slTable.getElementsByTagName("tbody")[0];
@@ -78,16 +80,15 @@ function loadData() {
 
     let slPlayerListFrag = document.createDocumentFragment();
 
-    playerNames.forEach(player => {
+    playerNames.forEach(playerName => {
         let opt = document.createElement("option");
-        opt.value = player.name;
-        //$(opt).data("player", player);
+        opt.value = playerName;
         slPlayerListFrag.appendChild(opt);
     });
 
     slPlayerList.appendChild(slPlayerListFrag);
 
-    //$(".playerAnswer").hide();
+    $(".playerAnswer").hide();
 
     const slPlayerName = document.getElementById("slPlayerName");
     const playerName = slPlayerName.value;
