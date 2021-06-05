@@ -138,7 +138,7 @@ function updateSongGuesses(song, tr, playerName, hideAnswers, slPlayerCorrectUnc
         player => (player.name === playerName)
     );
 
-    let playerAnswer = tr.getElementsByClassName("playerAnswer");
+    let playerAnswer = tr.getElementsByClassName("playerAnswer")[0];
 
     playerAnswer.style.display = hideAnswers ? 'none' : '';
 
