@@ -74,7 +74,7 @@ function loadData() {
     }
 
     const tbody = slTable.getElementsByTagName("tbody")[0];
-    $(tbody).append($(tbodyFrag));
+    tbody.appendChild(tbodyFrag);
 
     let slPlayerListFrag = document.createDocumentFragment();
 
@@ -85,7 +85,7 @@ function loadData() {
         slPlayerListFrag.appendChild(opt);
     });
 
-    $(slPlayerList).append($(slPlayerListFrag));
+    slPlayerList.appendChild(slPlayerListFrag);
 
     //$(".playerAnswer").hide();
 
