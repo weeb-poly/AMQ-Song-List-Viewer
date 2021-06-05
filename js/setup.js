@@ -19,14 +19,20 @@ function setup() {
         slImport.click();
     });
 
-    slSearchSongName.addEventListener("input", function () {
-        searchSongName(this.value);
+    slSearchSongName.addEventListener("keydown", function (event) {
+        if (event.keyCode === 13) {
+            searchSongName(this.value);
+        }
     });
-    slSearchArtist.addEventListener("input", function () {
-        searchArtist(this.value);
+    slSearchArtist.addEventListener("keydown", function (event) {
+        if (event.keyCode === 13) {
+            searchArtist(this.value);
+        }
     });
-    slSearchAnime.addEventListener("input", function () {
-        searchAnime(this.value);
+    slSearchAnime.addEventListener("keydown", function (event) {
+        if (event.keyCode === 13) {
+            searchAnime(this.value);
+        }
     });
 
     slAnimeTitleSelect.addEventListener("change", function () {
