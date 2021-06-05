@@ -72,7 +72,7 @@ function loadData() {
     }
 
     const tbody = slTable.getElementsByTagName("tbody")[0];
-    tbody.appendChild(tbodyFrag);
+    $(tbody).append($(tbodyFrag));
 
     let slPlayerListFrag = document.createDocumentFragment();
 
@@ -82,7 +82,7 @@ function loadData() {
         slPlayerListFrag.appendChild(opt);
     });
 
-    slPlayerList.appendChild(slPlayerListFrag);
+    $(slPlayerList).append($(slPlayerListFrag));
 
     $(".playerAnswer").hide();
 
