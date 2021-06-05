@@ -88,54 +88,47 @@ function updateRow(row) {
 }
 
 function searchSongName(query) {
-    const songData = document.getElementsByClassName('songData');
-
     const regexp = createRegExp(query);
-    
-    Array.from(songData).forEach(row => {
-        const elem = row.getElementsByClassName('songName')[0];
 
-        let res = regexp.test(elem.innerText);
+    //const songData = document.getElementsByClassName('songData');
+    const songNames = document.querySelectorAll('.songData .songName');
+
+    Array.from(songNames).forEach(elem => {
+        const res = regexp.test(elem.innerText);
         elem.classList.toggle("rowHidden", !res);
 
-        updateRow(row);
+        updateRow(elem.parentElement);
     });
 }
 
 function searchArtist(query) {
-    const songData = document.getElementsByClassName('songData');
-
     const regexp = createRegExp(query);
 
-    Array.from(songData).forEach(row => {
-        const elem = row.getElementsByClassName('songArtist')[0];
+    //const songData = document.getElementsByClassName('songData');
+    const songArtists = document.querySelectorAll('.songData .songArtist');
 
-        let res = regexp.test(elem.innerText);
+    Array.from(songArtists).forEach(elem => {
+        const res = regexp.test(elem.innerText);
         elem.classList.toggle("rowHidden", !res);
 
-        updateRow(row);
+        updateRow(elem.parentElement);
     });
 }
 
 function searchAnime(query) {
+    const regexp = createRegExp(query);
+
     const songData = document.getElementsByClassName('songData');
 
-    const regexp = createRegExp(query);
-    
     Array.from(songData).forEach(row => {
-        let animeNameRomaji = row.getElementsByClassName("animeNameRomaji")[0];
-        let animeNameEnglish = row.getElementsByClassName("animeNameEnglish")[0];
+        const animeNameRomaji = row.getElementsByClassName("animeNameRomaji")[0];
+        const animeNameEnglish = row.getElementsByClassName("animeNameEnglish")[0];
 
-        let hideRow = true;
-        
-        if (regexp.test(animeNameRomaji.innerText)) {
-            hideRow = false;
-        } else if (regexp.test(animeNameEnglish.innerText)) {
-            hideRow = false;
-        }
+        const showRow = regexp.test(animeNameRomaji.innerText) ||
+            regexp.test(animeNameEnglish.innerText);
 
-        animeNameRomaji.classList.toggle("rowHidden", hideRow);
-        animeNameEnglish.classList.remove("rowHidden", hideRow);
+        animeNameRomaji.classList.toggle("rowHidden", !showRow);
+        animeNameEnglish.classList.remove("rowHidden", !showRow);
 
         updateRow(row);
     });
