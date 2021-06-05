@@ -130,10 +130,10 @@ function updateTableGuesses(playerName) {
 
     let hideAnswers = !playerExists || slPlayerAnswersUnchecked;
 
-    let songDatas = document.querySelectorAll("tbody tr.songData");
-    
+    let rows = document.getElementsByClassName("songData");
+
     for (let i = 0; i < importData.length; i++) {
-        updateSongGuesses(importData[i], songDatas[i], playerName, hideAnswers, slPlayerCorrectUnchecked);
+        updateSongGuesses(importData[i], rows[i], playerName, hideAnswers, slPlayerCorrectUnchecked);
     }
 }
 
