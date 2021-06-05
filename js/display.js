@@ -76,9 +76,10 @@ function loadData() {
 
     let slPlayerListFrag = document.createDocumentFragment();
 
-    playerNames.forEach(playerName => {
+    playerNames.forEach(player => {
         let opt = document.createElement("option");
-        opt.value = playerName; // I think this might be part of the issue
+        opt.value = player.name;
+        //$(opt).data("player", player);
         slPlayerListFrag.appendChild(opt);
     });
 
